@@ -1,0 +1,523 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2.0",
+    "title": "Globaltec UAUWeb API v2.0",
+    "description": "Esta é a lista dos métodos homologados para integração do UAU"
+  },
+  "host": "globaltec-app01:90",
+  "basePath": "/UAUApi_Integracao",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/v{version}/Autenticador/LogoutUsuario": {
+      "post": {
+        "tags": [
+          "Autenticador"
+        ],
+        "summary": "Realiza o logout de um usuário destruíndo a sessão do usuário logado",
+        "description": "Criação: Diogo Rodrigues Gonçalves      Data: 22/01/2018",
+        "operationId": "Autenticador_LogoutUsuario",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token Authentication",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-INTEGRATION-Authorization",
+            "in": "header",
+            "description": "Token De Integração",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Ocorreu um erro ao processar sua requisição.",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          }
+        }
+      }
+    },
+    "/api/v{version}/Autenticador/AutenticarUsuario": {
+      "post": {
+        "tags": [
+          "Autenticador"
+        ],
+        "summary": "Método para validar usuário e sua respectiva senha",
+        "description": "Retorna True caso o usuário e senha sejam válidos\r\nRetorna False se usuário e senha sejam inválidos",
+        "operationId": "Autenticador_AutenticarUsuario",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "param",
+            "in": "body",
+            "description": "Objeto que contem usuário e senha",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UAUApi.Models.Autenticador.AutenticarUsuarioRequest"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token Authentication",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-INTEGRATION-Authorization",
+            "in": "header",
+            "description": "Token De Integração",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Login do usuário ou a senha estão incorretos.",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro ao realizar a autenticação, não foi possível verificar os dados de login.",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          }
+        }
+      }
+    },
+    "/api/v{version}/Autenticador/AutenticarUsuarioApp": {
+      "post": {
+        "tags": [
+          "Autenticador"
+        ],
+        "summary": "Realiza a autenticação do usuário e senha verificando o método de login sendo AD será autenticado o usuário corporativo,\r\ncaso contrário será validado como usuário UAU ou Cliente.\r\nAtualmente utilizado pela API do Mobile.",
+        "operationId": "Autenticador_AutenticarUsuarioApp",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "param",
+            "in": "body",
+            "description": "Objeto que contem usuário e senha",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UAUApi.Models.Autenticador.AutenticarUsuarioRequest"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token Authentication",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-INTEGRATION-Authorization",
+            "in": "header",
+            "description": "Token De Integração",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Usuário não encontrado. Autenticação de usuário via AD é necessário que o usuário Uau tenha o usuário AD vinculado. Acessar o módulo Segurança e configurar o usuário AD.",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro ao realizar a autenticação, não foi possível verificar os dados de login.",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          }
+        }
+      }
+    },
+    "/api/v{version}/Autenticador/VerificaUsuarioLogado": {
+      "post": {
+        "tags": [
+          "Autenticador"
+        ],
+        "summary": "Verifica se um usuário está logado",
+        "operationId": "Autenticador_VerificaUsuarioLogado",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token Authentication",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-INTEGRATION-Authorization",
+            "in": "header",
+            "description": "Token De Integração",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Usuário não está logado!",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro ao processar sua requisição.",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          }
+        }
+      }
+    },
+    "/api/v{version}/Autenticador/ConsultarDadosUsrLogado": {
+      "post": {
+        "tags": [
+          "Autenticador"
+        ],
+        "operationId": "Autenticador_ConsultarDadosUsrLogado",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token Authentication",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-INTEGRATION-Authorization",
+            "in": "header",
+            "description": "Token De Integração",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "dadospessoais",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Implementado apenas para usuários do tipo pessoa!",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          },
+          "401": {
+            "description": "Usuário não está logado!",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro ao processar sua requisição.",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          }
+        }
+      }
+    },
+    "/api/v{version}/Autenticador/AutentificarUsuarioTitanium": {
+      "post": {
+        "tags": [
+          "Autenticador"
+        ],
+        "operationId": "Autenticador_AutentificarUsuarioTitanium",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "param",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UAUApi.Models.Autenticador.AutentificarUsuarioTitaniumRequest"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token Authentication",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-INTEGRATION-Authorization",
+            "in": "header",
+            "description": "Token De Integração",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Login do usuário ou a senha estão incorretos.",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro ao realizar a autenticação, não foi possível verificar os dados de login.",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          }
+        }
+      }
+    },
+    "/api/v{version}/Autenticador/AutenticarUsuarioCorporativo": {
+      "post": {
+        "tags": [
+          "Autenticador"
+        ],
+        "summary": "Realiza a autenticação do usuário através do Active Directory",
+        "operationId": "Autenticador_AutenticarUsuarioCorporativo",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "param",
+            "in": "body",
+            "description": "Objeto que contem usuário e senha",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UAUApi.Models.Autenticador.AutenticarUsuarioRequest"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token Authentication",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-INTEGRATION-Authorization",
+            "in": "header",
+            "description": "Token De Integração",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Login do usuário ou a senha estão incorretos.",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro ao realizar a autenticação, não foi possível verificar os dados de login.",
+            "schema": {
+              "$ref": "#/definitions/UAUApi.ResponseHandler"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UAUApi.ResponseHandler": {
+      "type": "object",
+      "properties": {
+        "Detalhe": {
+          "description": "Detalhamento da Exception StrackTrace",
+          "type": "string"
+        },
+        "Mensagem": {
+          "description": "Mensagem da Exception",
+          "type": "string"
+        },
+        "Descricao": {
+          "description": "Descrição personalizada",
+          "type": "string"
+        }
+      }
+    },
+    "UAUApi.Models.Autenticador.AutenticarUsuarioRequest": {
+      "description": "Essa classe está como exemplo das validações usando o DataAnnotation e o FluentValidation \r\nsendo que o mesmo pode ser usado dentro do projeto simultaneamente",
+      "required": [
+        "Login"
+      ],
+      "type": "object",
+      "properties": {
+        "Login": {
+          "type": "string"
+        },
+        "Senha": {
+          "description": "Senha do usuário",
+          "type": "string"
+        },
+        "UsuarioUAUSite": {
+          "type": "string"
+        }
+      }
+    },
+    "UAUApi.Models.Autenticador.AutentificarUsuarioTitaniumRequest": {
+      "type": "object",
+      "properties": {
+        "usuario": {
+          "type": "string"
+        },
+        "senha": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
